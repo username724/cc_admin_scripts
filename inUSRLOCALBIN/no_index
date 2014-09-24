@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for filename in /Volumes/*
+do
+  if [[ $filename != "/Volumes/SCA_MacHD" ]] && [[ $filename != "/Volumes/Mac Software" ]] && [[ $filename != "/Volumes/fix" ]] && [[ $filename != "/Volumes/LWP" ]]
+then
+  file=$filename"/.metadata_never_index"
+  touch "$file"
+fi
+done;

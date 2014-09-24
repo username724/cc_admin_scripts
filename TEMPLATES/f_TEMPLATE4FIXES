@@ -1,0 +1,32 @@
+#!/bin/bash
+# f_template
+# - description
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#DO NOT CHANGE THESE: VARIABLES and TESTS
+LOGFFILE="/private/var/root/cc_maintain.log"
+ELF=`basename $0`
+TAMP=`date "+%m-%d-%Y %H:%M:%S"`
+CA="$ELF : $TAMP : "
+TMP="/private/var/root/bin/TEMP_FILES"
+TST00="/Volumes/SCA_MacHD/Users/ard"
+#END DO NOT CHANGE AREA
+
+#Your Variables
+
+#END YOUR VARIABLS
+
+cd /
+
+# Make sure we are on an SCA machine, then rm old app and cp new one
+if [[ -d "${TST00}" ]]
+then
+	echo "${TAMP} : EXECUTING ${ELF}" >> $LOGFFILE
+	## YOUR CODE HERE ##
+else
+	echo "${CA}E : WRONG MACHINE" >> $LOGFFILE
+	exit 1
+fi
+
+echo "${CA}Executed succesfully" >> $LOGFFILE
+exit 0

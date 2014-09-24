@@ -1,0 +1,15 @@
+#!/bin/bash
+# refindit
+# - bless rEFInd to get the bootloader screen
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+TST="/EFI/refind/sca.bmp"
+
+if [[ -e $TST ]]
+then
+	bless --setBoot --folder /EFI/refind  --file /EFI/refind/refind_x64.efi
+else
+	echo "no sca refind here"
+fi
+
+exit 0

@@ -1,0 +1,12 @@
+#!/bin/bash
+#Log out with applescript
+TEST=`/usr/bin/who | /usr/bin/awk '{ print $2 }'| grep console`
+
+if [ ${TEST} == 'console' ]
+then
+	echo "somebody is logged in"
+	osascript -e 'ignoring application responses' -e 'tell application "loginwindow" to «event aevtrlgo»' -e end
+	wait
+	exit 0
+	echo "should be logged out now"
+fi

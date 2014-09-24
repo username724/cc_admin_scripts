@@ -1,0 +1,23 @@
+#!/bin/bash
+# SearchKiller
+# Kills off spotlight in a way that will blow your soul out of your body
+#########################################################################
+shopt -s extglob
+TEST=/Volumes/SCA_MacHD/Users
+
+
+if [ "$(id -u)" != "0" ]; then
+   echo "MUST RUN AS R00T!!!" 1>&2
+   exit 1
+fi
+
+if [[ -d "${TEST}" && ! -L "${TEST}" ]]
+then
+	mdutil -a -i off
+	launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
+	chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+else
+ 	echo "WE'RE NOT IN KANSAS, WE'RE IN ARKANSAS!!"
+ 	echo "Actually, this does not appear to be a lab machine so NVM..."
+ 	exit 99
+fi

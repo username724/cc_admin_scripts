@@ -1,0 +1,4 @@
+#!/bin/bash
+# set netboot one liner
+bless --netboot --server bsdp://10.10.52.5 --nextonly
+exit 0

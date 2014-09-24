@@ -1,0 +1,24 @@
+# Compiled Python files
+*.pyc
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
+
+# Files cause I said so...
+*.scpt
+mnt_*
+macsoftware
+*_mnt
+syslog2serv
+dspinf2serv
+login_ard_gui
+dockutil

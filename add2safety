@@ -1,0 +1,48 @@
+#!/bin/bash
+# add2safety
+# - add's username to safety checks in rmu.sh and rmUsersAll
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+NO_ARGS=0
+E_OPTERROR=85
+FRMU='/private/var/root/bin/IOhooks/rmu.sh'
+FRMA='/private/var/root/bin/rmUsersALL'
+SFTY='touch /Volumes/SCA_MacHD/Users/temp'
+NSFT='touch /Volumes/SCA_MacHD/Users/'
+
+if [ $# -eq "$NO_ARGS" ]
+then
+  echo "Usage: `basename $0` options (-u <username>)"
+  exit $E_OPTERROR          # Exit and explain usage.
+fi
+
+while getopts ":u:" Option
+do
+  case $Option in
+    u     ) USER=${OPTARG};;
+    *     ) echo "Unimplemented option chosen.";;   # Default.
+  esac
+done
+
+shift $(($OPTIND - 1))
+
+#start code to add user paseed in by -u <username>
+function add2rmua() {
+    sed -i.bak "s/student/student|$USER/" $FRMA
+}
+
+function add2rmu() {
+    sed -i.bak "s|SAFETY|$NSFT$USER|" $FRMU
+}
+
+add2rmua
+wait $!
+add2rmu
+wait $!
+
+rm /private/var/root/bin/rmUsersALL.bak
+rm /private/var/root/bin/rmu.sh.bak
+
+echo "Done adding $USER to safety checks"
+
+exit 0

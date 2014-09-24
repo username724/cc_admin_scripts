@@ -1,0 +1,14 @@
+#!/bin/bash
+shopt -s extglob
+TEST=/Volumes/SCA_MacHD/Users
+if [[ -d "${TEST}" && ! -L "${TEST}" ]]
+then
+	cd /Volumes/SCA_MacHD/Users
+	rm -rf !(ard|Shared|eng|temp|classroom|spare|auto|student)
+	echo "ALL YOUR BASE ARE OURS!!"
+	exit 0
+else
+ 	echo "WE'RE NOT IN KANSAS, WE'RE IN ARKANSAS!!"
+ 	echo "Actually, this does not appear to be a lab machine so NVM..."
+ 	exit 99
+fi

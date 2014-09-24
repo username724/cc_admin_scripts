@@ -1,0 +1,62 @@
+#!/bin/bash
+# cc_maintain v2.1.2.20140915
+# 2012???? (v1.1.1?) - added log with timestamps
+# 20121204 (v2.0.1) - added sync_rootbin and ccFix_czecNrun
+# 20130102 [v2.0.2] - fixed small errors
+# 20140906 [v2.1.1] - fixed small errors checks
+# 20140915 [v2.1.2] - little cleanup
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+# before we do anything tell stdout what's up
+echo "starting up cc maintain"
+
+# now we can do stuff
+
+LOGFFILE="/private/var/root/cc_maintain.log"
+ELF=`basename $0`
+TAMP=`date "+%m-%d-%Y %H:%M:%S"`
+CA="$ELF : $TAMP : "
+TEST=`/usr/bin/who | /usr/bin/awk '{ print $2 }'| grep console`
+TEST0=/Volumes/fix/root_bin/bin
+TEST1=/Volumes/SCA_MacHD/Users/ard
+
+#clear the logfile before starting maintenance
+echo "${CA}Refresh logfile..." > $LOGFFILE
+
+echo "${CA}About to run cc maintenance scripts." >> $LOGFFILE
+
+if [[ "$TEST" = "console" ]]; then
+	echo "${CA}Someone is logged in..." >> $LOGFFILE
+	echo "${CA}Exiting" >> $LOGFFILE
+	exit 0
+else
+	echo "${CA}Running all daily, weekly and monthly periodic scripts."  >> $LOGFFILE
+	/usr/sbin/periodic daily weekly
+	wait $!
+
+	echo "${CA}Removing Library caches."  >> $LOGFFILE
+	rm -Rf /Volumes/SCA_MacHD/Library/Cahces/*
+	wait $!
+
+    if [[ ! -d "${TEST1}" && ! -L "${TEST1}" ]]; then
+	    echo "${CA}Checking for fixes and running them."  >> $LOGFFILE
+	    /usr/local/bin/sync_rootbin
+	    wait $!
+	    sleep 5
+	else
+	    echo "${CA}Mac Software is mounted" >> $LOGFFILE
+	fi
+
+	echo "${CA}Checking for fixes and running them."  >> $LOGFFILE
+	/usr/local/bin/ccFix_czecNrun
+	wait $!
+	sleep 5
+
+	echo "${CA}END cc maintenance and shutdown" >> $LOGFFILE
+	/sbin/shutdown -h now
+	wait
+	exit 0
+fi
+
+
+exit 0

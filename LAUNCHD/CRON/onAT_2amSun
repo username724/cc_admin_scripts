@@ -1,0 +1,7 @@
+#!/bin/bash
+# pmset for cc maintenance
+# - sets a schedule to power on at 2am on Sundays
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+pmset -g sched
+pmset repeat wakeorpoweron U 02:00:00

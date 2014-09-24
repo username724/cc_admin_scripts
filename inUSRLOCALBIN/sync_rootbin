@@ -1,0 +1,99 @@
+#!/bin/bash
+# sync_rootbin
+# - changed everything to point to new share "networkscripts$" (09/19/2014)
+# - "functionized" all actions into smaller bites (09/22/2014)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+LOGF="/private/var/root/cc_maintain.log"
+ELF=`basename $0`
+TAMP=`date "+%m-%d-%Y %H:%M:%S"`
+STAMP=`date "+%Y%m%d%H%M%S"`
+VAR="$STAMP"
+CA="$ELF : $TAMP : "
+TEST1=/Volumes/networkscripts\$/OSX/root_bin/bin
+
+function lcheck_off() {
+    echo "${CA}turn lwp off" >> $LOGF
+    touch /private/var/root/check.txt
+    echo "off" > /private/var/root/check.txt
+}
+
+function lmount_repo() {
+    echo "${CA}mounting networkscripts" >> $LOGF
+    osascript /usr/local/bin/mnt_networkscripts.scpt
+    wait
+    sleep 5
+    echo "${CA}Hopefully networkscripts mounted correctly" >> $LOGF
+}
+
+function lupdate_rootbin() {
+    if [[ -d "${TEST1}" ]]
+    then
+        echo "${CA}networkscripts is mounted" >> $LOGF
+        echo "${CA}copying in latest rootbin scripts and folders" >> $LOGF
+        #cp -Rf /Volumes/networkscripts\$/OSX/root_bin/bin/* /private/var/root/bin
+        rsync --update -aq --delete --exclude '.DS_Store' /Volumes/networkscripts\$/OSX/root_bin/bin/ /private/var/root/bin
+        wait
+        sleep 5
+        echo "${CA}setting permissions for all the scripts" >> $LOGF
+        chown -Rf root:wheel /private/var/root/bin
+        chmod -Rf 755 /private/var/root/bin
+        echo "${CA}unmounting networkscripts" >> $LOGF
+        umount /Volumes/networkscripts\$
+    else
+        echo "${CA}could not get network access to rootbin!!" >> $LOGF
+        echo "${CA}unmount networkscripts" >> $LOGF
+        umount /Volumes/networkscripts\$
+        echo "${CA}sync failed at ${VAR}" >> $LOGF
+        echo "${CA}exiting now" >> $LOGF
+        exit 0
+    fi
+}
+
+function lcopy_usrlocalbin() {
+    echo "${CA}copy inUSRLOCALBIN" >> $LOGF
+    cp -Rf /private/var/root/bin/inUSRLOCALBIN/* /usr/local/bin
+    wait
+    chown -Rf root:wheel /usr/local/bin/*
+    wait
+    chmod -Rf 755 /usr/local/bin/*
+    wait
+}
+
+function lstamp_updated() {
+    echo "${CA}mark updated" >> $LOGF
+    rm -f /private/var/root/bin/updated_*
+    ## TO DO - make sure the stamp is working
+    touch /private/var/root/bin/updated_${VAR}
+}
+
+function lcheck_on() {
+    echo "${CA}turn lwp on" >> $LOGF
+    touch /private/var/root/check.txt
+    echo "on" > /private/var/root/check.txt
+}
+
+function main() {
+    echo "${CA}start syncing root bin" >> $LOGF
+    cd /
+    lcheck_off
+    wait $!
+    lmount_repo
+    wait $!
+    lupdate_rootbin
+    wait $!
+    lcopy_usrlocalbin
+    wait $!
+    lstamp_updated
+    wait $!
+    lcheck_on
+    wait $!
+    echo "${CA}stop syncing root bin" >> $LOGF
+}
+
+echo "syncing root bin folder"
+
+main
+
+echo "root bin sync exiting"
+
+exit 0
