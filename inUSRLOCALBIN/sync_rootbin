@@ -2,6 +2,7 @@
 # sync_rootbin
 # - changed everything to point to new share "networkscripts$" (09/19/2014)
 # - "functionized" all actions into smaller bites (09/22/2014)
+# - moved copy inUSRLOCALBIN to cc_maintain, avoids overwriting script while still running
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 LOGF="/private/var/root/cc_maintain.log"
 ELF=`basename $0`
@@ -9,7 +10,10 @@ TAMP=`date "+%m-%d-%Y %H:%M:%S"`
 STAMP=`date "+%Y%m%d%H%M%S"`
 VAR="$STAMP"
 CA="$ELF : $TAMP : "
+##TODO - find a better way to test for mounted volumes
 TEST1=/Volumes/networkscripts\$/OSX/root_bin/bin
+TEST2=/Volumes/Mac\ Software
+TEST3=/Volumes/fix
 
 function lcheck_off() {
     echo "${CA}turn lwp off" >> $LOGF
@@ -81,8 +85,8 @@ function main() {
     wait $!
     lupdate_rootbin
     wait $!
-    lcopy_usrlocalbin
-    wait $!
+    #lcopy_usrlocalbin
+    #wait $!
     lstamp_updated
     wait $!
     lcheck_on
