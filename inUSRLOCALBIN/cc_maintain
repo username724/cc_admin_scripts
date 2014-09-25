@@ -1,62 +1,111 @@
 #!/bin/bash
-# cc_maintain v2.1.2.20140915
+# cc_maintain v2.2.0.20140924
 # 2012???? (v1.1.1?) - added log with timestamps
 # 20121204 (v2.0.1) - added sync_rootbin and ccFix_czecNrun
 # 20130102 [v2.0.2] - fixed small errors
 # 20140906 [v2.1.1] - fixed small errors checks
-# 20140915 [v2.1.2] - little cleanup
+# 20140924 [v2.2.0] - added command to force logout user if applicable
+#                   - functionized everything
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-# before we do anything tell stdout what's up
-echo "starting up cc maintain"
-
-# now we can do stuff
-
-LOGFFILE="/private/var/root/cc_maintain.log"
+LOGF="/private/var/root/cc_maintain.log"
 ELF=`basename $0`
 TAMP=`date "+%m-%d-%Y %H:%M:%S"`
 CA="$ELF : $TAMP : "
 TEST=`/usr/bin/who | /usr/bin/awk '{ print $2 }'| grep console`
-TEST0=/Volumes/fix/root_bin/bin
-TEST1=/Volumes/SCA_MacHD/Users/ard
 
-#clear the logfile before starting maintenance
-echo "${CA}Refresh logfile..." > $LOGFFILE
+function lcheck_off() {
+    echo "${CA}turn lwp off" >> $LOGF
+    touch /private/var/root/check.txt
+    echo "off" > /private/var/root/check.txt
+}
 
-echo "${CA}About to run cc maintenance scripts." >> $LOGFFILE
+function luser_check() {
+    if [ ${TEST} == 'console' ]
+    then
+        echo "${CA}somebody is logged in" >> $LOGF
+        echo "${CA}attempting to force log out"  >> $LOGF
+        osascript -e 'ignoring application responses' -e 'tell application "loginwindow" to «event aevtrlgo»' -e end
+        wait
+        sleep 5
+        echo "${CA}should be logged out now"  >> $LOGF
+        if [ ${TEST} == 'console' ]
+        then
+            echo "${CA}forced logout failed"  >> $LOGF
+            echo "${CA}exiting cc maintain"  >> $LOGF
+            exit 0
+        fi
+    fi
+}
 
-if [[ "$TEST" = "console" ]]; then
-	echo "${CA}Someone is logged in..." >> $LOGFFILE
-	echo "${CA}Exiting" >> $LOGFFILE
-	exit 0
-else
-	echo "${CA}Running all daily, weekly and monthly periodic scripts."  >> $LOGFFILE
+function lperiodic() {
+	echo "${CA}Running all daily, weekly and monthly periodic scripts."  >> $LOGF
 	/usr/sbin/periodic daily weekly
 	wait $!
+}
 
-	echo "${CA}Removing Library caches."  >> $LOGFFILE
+function lclear_caches() {
+	echo "${CA}Removing Library caches."  >> $LOGF
 	rm -Rf /Volumes/SCA_MacHD/Library/Cahces/*
 	wait $!
+}
 
-    if [[ ! -d "${TEST1}" && ! -L "${TEST1}" ]]; then
-	    echo "${CA}Checking for fixes and running them."  >> $LOGFFILE
-	    /usr/local/bin/sync_rootbin
-	    wait $!
-	    sleep 5
-	else
-	    echo "${CA}Mac Software is mounted" >> $LOGFFILE
-	fi
+function lrootbin_sync() {
+    echo "${CA}starting root bin sync"  >> $LOGF
+    /usr/local/bin/sync_rootbin
+    wait $!
+    sleep 5
+}
 
-	echo "${CA}Checking for fixes and running them."  >> $LOGFFILE
+function lcopy_usrlocalbin() {
+    echo "${CA}copying inUSRLOCALBIN" >> $LOGF
+    cp -Rf /private/var/root/bin/inUSRLOCALBIN/* /usr/local/bin
+    wait
+    chown -Rf root:wheel /usr/local/bin/*
+    wait
+    chmod -Rf 755 /usr/local/bin/*
+    wait
+}
+
+function lcc_fixes() {
+	echo "${CA}Checking for fixes and running them."  >> $LOGF
 	/usr/local/bin/ccFix_czecNrun
 	wait $!
 	sleep 5
+}
 
-	echo "${CA}END cc maintenance and shutdown" >> $LOGFFILE
+function lpower_off() {
+	echo "${CA}END cc maintenance and shutdown" >> $LOGF
 	/sbin/shutdown -h now
 	wait
 	exit 0
-fi
+}
 
+function lcheck_on() {
+    echo "${CA}turn lwp on" >> $LOGF
+    touch /private/var/root/check.txt
+    echo "on" > /private/var/root/check.txt
+}
+
+function main() {
+    echo "${CA}Refreshing logfile..." > $LOGF
+    echo "${CA}starting cc maintain" >> $LOGF
+    lcheck_off
+    luser_check
+    lperiodic
+    lrootbin_sync
+    lcopy_usrlocalbin
+    lcc_fixes
+    lcheck_on
+    lpower_off
+    echo "${CA}ending cc maintain" >> $LOGF
+}
+
+echo "starting cc maintain"
+
+main
+wait
+sleep 10
+
+echo "exiting cc maintain"
 
 exit 0
