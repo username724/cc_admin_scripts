@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 # rmMCSTATE by Nic Wagner
-# ver 1.0.0 (7.28.11) remove *all* MCSTATE files from system drive 
-# ver 1.0.1 (8.31.11) changed mdfind to find (spotlight is disabled) && reworked error checking 
+# ver 1.0.0 (7.28.11) remove *all* MCSTATE files from system drive
+# ver 1.0.1 (8.31.11) changed mdfind to find (spotlight is disabled) && reworked error checking
 #=====================================================================================
 TEST=/Volumes/SCA_MacHD/Users/ard
 echo "RM_MCSTATE RUNNING!!"

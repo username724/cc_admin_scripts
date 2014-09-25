@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # activates login and logout hooks to run logouthooks.sh
 #=====================================================================================
 

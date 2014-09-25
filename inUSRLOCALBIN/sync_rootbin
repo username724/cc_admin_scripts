@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # sync_rootbin
 # - changed everything to point to new share "networkscripts$" (09/19/2014)
 # - "functionized" all actions into smaller bites (09/22/2014)

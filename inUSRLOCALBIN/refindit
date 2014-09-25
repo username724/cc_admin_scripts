@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # refindit
 # - bless rEFInd to get the bootloader screen
 #

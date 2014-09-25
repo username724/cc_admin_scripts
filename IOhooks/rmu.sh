@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # rmu (aka remove users, rm_users, rmUsers) by Nic Wagner
 # NOTE: All login/out-hooks must exit with a status of zero no matter what!!
 # ver 1.0.0 (07.15.10) interactive script to remove folders by with given 3 digits

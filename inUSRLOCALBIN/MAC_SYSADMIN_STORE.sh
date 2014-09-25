@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # MAC_SYSADMIN_STORE v2.5.3
 # last edit: 20140522v01
 # Functions:
@@ -338,7 +338,7 @@ function create_UserTemplate() {
 	# unhide /Users/temp/Library cause users libraries are hidden in Lion
 	chflags nohidden /Users/temp/Library
 	chflags nohidden /Users/temp/Library/Preferences/.GlobalPreferences.plist
-	 
+
 	#clean out old caches and files before cp
 	rm -Rf /Users/temp/Downloads/*
 	rm -Rf /System/Library/User\ Template/English.lproj/Library
@@ -662,7 +662,7 @@ showMainMenu
 # 	umount /Volumes/Mac\ Software
 # }
 # #end login_ScreenSaver
-# 
+#
 # function login_BackGround() {
 # 	mkdir /Volumes/Mac\ Software
 # 	mount_afp "afp://admin:m80,mOuse@10.10.52.5/Mac%20Software" /Volumes/Mac\ Software
@@ -682,14 +682,14 @@ showMainMenu
 # 	umount /Volumes/Mac\ Software
 # }
 # #end login_BackGround
-# 
+#
 # function sca_IOhooks() {
 # 	#sh /private/var/root/IOhooks/activatelogouthooks.sh
 # 	echo "IO hooks must be manually entered in the root terminal"
 # 	# 20120514 IO hooks must be manually entered in the root terminal
 # }
 # #end sca_IOhooks
-# 
+#
 # function Set_DefaultDeskTop() {
 # 	mkdir /Volumes/Mac\ Software
 # 	mount_afp "afp://admin:m80,mOuse@10.10.52.5/Mac%20Software" /Volumes/Mac\ Software/
@@ -697,12 +697,12 @@ showMainMenu
 # 	umount /Volumes/Mac\ Software
 # }
 # #end Set_DefaultDeskTop
-# 
+#
 # function ad_Tweaks(){
 # 	dsconfigad -passinterval 0
 # }
 # #end ad_Tweaks
-# 
+#
 # function login_WindowTweaks(){
 # 	cd /
 # 	# removed in lion -> defaults write /Library/Preferences/com.apple.loginwindow StartupDelay 30

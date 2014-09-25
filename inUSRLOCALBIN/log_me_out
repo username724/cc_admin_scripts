@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #Log out with applescript
 TEST=`/usr/bin/who | /usr/bin/awk '{ print $2 }'| grep console`
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # chan
 # changed lwp_serv.sh to check remote file then set local switch file
 # - /private/var/root/check.txt

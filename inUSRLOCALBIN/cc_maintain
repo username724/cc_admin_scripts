@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # cc_maintain v2.2.0.20140924
 # 2012???? (v1.1.1?) - added log with timestamps
 # 20121204 (v2.0.1) - added sync_rootbin and ccFix_czecNrun

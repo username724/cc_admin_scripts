@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # pmset for cc maintenance
 # - sets a schedule to power on at 2am on Sundays
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

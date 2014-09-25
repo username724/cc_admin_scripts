@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # ccFix_czecNrun
 # - checks to make sure we on on a lab machine
 # - checks for fixes in F_ixes folder

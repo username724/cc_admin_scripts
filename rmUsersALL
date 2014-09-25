@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 shopt -s extglob
 TEST=/Volumes/SCA_MacHD/Users
 if [[ -d "${TEST}" && ! -L "${TEST}" ]]

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # logouthooks.sh by n!c
 # this script calls whatever scripts we want to run when a user logs out
 # located in /private/var/root/bin/IOhooks

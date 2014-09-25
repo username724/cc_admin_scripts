@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # scratch_permissions.sh
 # - fix up all the permissions on /Audio /Video and or /Scratch partitions
 # - chown to _unknown:staff
