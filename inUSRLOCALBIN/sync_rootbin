@@ -3,6 +3,7 @@
 # - changed everything to point to new share "networkscripts$" (09/19/2014)
 # - "functionized" all actions into smaller bites (09/22/2014)
 # - moved copy inUSRLOCALBIN to cc_maintain, avoids overwriting script while still running
+# - NOTE: check for mount must use -e instead of -d
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 LOGF="/private/var/root/cc_maintain.log"
 ELF=`basename $0`
@@ -27,10 +28,11 @@ function lmount_repo() {
     wait
     sleep 5
     echo "${CA}Hopefully networkscripts mounted correctly" >> $LOGF
+    ls $TEST1
 }
 
 function lupdate_rootbin() {
-    if [[ -d "${TEST1}" ]]
+    if [[ -e "${TEST1}" ]]
     then
         echo "${CA}networkscripts is mounted" >> $LOGF
         echo "${CA}copying in latest rootbin scripts and folders" >> $LOGF
@@ -83,6 +85,7 @@ function main() {
     wait $!
     lmount_repo
     wait $!
+    sleep 5
     lupdate_rootbin
     wait $!
     #lcopy_usrlocalbin
