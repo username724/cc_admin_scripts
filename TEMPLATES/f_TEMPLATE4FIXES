@@ -1,33 +1,34 @@
 #!/bin/sh
 # f_template
 # - description
+# ## ALL SCRIPTS SHOULD BE /bin/sh not /bin/bash ##
 # ## ALL f_ scripts must exit with code 0 ##
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#DO NOT CHANGE THESE: VARIABLES and TESTS
+##->START DO NOT CHANGE AREA<-##
 LOGF="/private/var/root/cc_maintain.log"
 ELF=`basename $0`
 TAMP=`date "+%m-%d-%Y %H:%M:%S"`
 CA="$ELF : $TAMP : "
 TMP="/private/var/root/bin/TEMP_FILES"
 TST00="/Volumes/SCA_MacHD/Users/ard"
-#END DO NOT CHANGE AREA
+##->END DO NOT CHANGE AREA<-##
 
-#START YOUR VARIABLES & FUNCTIONS
+#START YOUR VARIABLES & FUNCTIONS#
 
-#END YOUR VARIABLES & FUNCTIONS
+#END YOUR VARIABLES & FUNCTIONS#
 
 cd /
 
 # Make sure we are on an SCA machine, then rm old app and cp new one
 if [[ -d "${TST00}" ]]
 then
-	echo "${TAMP} : EXECUTING ${ELF}" >> $LOGF
+	echo "${CA} EXECUTING ${ELF}" >> $LOGF
 	## YOUR CODE HERE ##
 
 	## END YOUR CODE ##
-	echo "${CA}Executed succesfully" >> $LOGF
+	echo "${CA} Executed succesfully" >> $LOGF
 else
-	echo "${CA}E : WRONG MACHINE" >> $LOGF
+	echo "${CA} E : WRONG MACHINE" >> $LOGF
 	exit 0
 fi
 
