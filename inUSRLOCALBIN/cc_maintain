@@ -6,6 +6,9 @@
 # 20140906 [v2.1.1] - fixed small errors checks
 # 20140924 [v2.2.0] - added command to force logout user if applicable
 #                   - functionized everything
+# 20140929 [v2.2.0] - SPECIAL NOTES:
+#                   - user check only doesn't really work, can't double check
+#                   - check for mount is in sync_rootbin must use -e instead of -d
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 LOGF="/private/var/root/cc_maintain.log"
 ELF=`basename $0`
@@ -20,7 +23,7 @@ function lcheck_off() {
 }
 
 function luser_check() {
-    if [ ${TEST} == 'console' ]
+    if [[ ${TEST} = 'console' ]]
     then
         echo "${CA}somebody is logged in" >> $LOGF
         echo "${CA}attempting to force log out"  >> $LOGF
@@ -28,12 +31,6 @@ function luser_check() {
         wait
         sleep 5
         echo "${CA}should be logged out now"  >> $LOGF
-        if [ ${TEST} == 'console' ]
-        then
-            echo "${CA}forced logout failed"  >> $LOGF
-            echo "${CA}exiting cc maintain"  >> $LOGF
-            exit 0
-        fi
     fi
 }
 
@@ -59,11 +56,15 @@ function lrootbin_sync() {
 function lcopy_usrlocalbin() {
     echo "${CA}copying inUSRLOCALBIN" >> $LOGF
     cp -Rf /private/var/root/bin/inUSRLOCALBIN/* /usr/local/bin
-    wait
-    chown -Rf root:wheel /usr/local/bin/*
-    wait
-    chmod -Rf 755 /usr/local/bin/*
-    wait
+    rm -f /usr/local/bin/.DS_Store
+    for i in $(ls /private/var/root/bin/inUSRLOCALBIN)
+    do
+        echo "${CA}running chmod&chown on /usr/local/bin/$i"
+        chown -Rf root:wheel /usr/local/bin/$i
+        wait
+        chmod -Rf 755 /usr/local/bin/$i
+        wait
+    done
 }
 
 function lcc_fixes() {
@@ -90,13 +91,21 @@ function main() {
     echo "${CA}Refreshing logfile..." > $LOGF
     echo "${CA}starting cc maintain" >> $LOGF
     lcheck_off
+    wait
     luser_check
+    wait
     lperiodic
+    wait
     lrootbin_sync
+    wait
     lcopy_usrlocalbin
+    wait
     lcc_fixes
+    wait
     lcheck_on
+    wait
     lpower_off
+    wait
     echo "${CA}ending cc maintain" >> $LOGF
 }
 
